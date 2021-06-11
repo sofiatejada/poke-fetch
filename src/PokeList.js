@@ -5,7 +5,7 @@ export default class PokeList extends Component {
     render() {
         return (
             <div>
-                {this.props.pokedex.map(pokemon => <PokeItem booger={pokemon} />)}
+                <PokeItem booger={this.props.pokemon} />
             </div>
         )
     }

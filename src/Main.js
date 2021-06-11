@@ -6,36 +6,54 @@ export default class Main extends Component {
 
 
     state = {
-        pokemon: [],
+        pokedex: [],
+        loading: false,
+        query: '',
+        direction: '',
     }
 
     componentDidMount = async () => {
-        const data = await request.get('https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon');
-        console.log(data)
-        // this.setState({ pokemon:  })
-
+        await this.fetchPokeData();
     }
 
     fetchPokeData = async () => {
-        const data = await request.get('https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon');
+        this.setState({ loading: true });
+
+        const URL = this.state.query ? `https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${this.state.query}&sort=pokemon&direction=${this.state.direction}` : 'https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon'
+
+        const data = await request.get(URL);
         console.log(data);
+        this.setState({ loading: false })
+        this.setState({ pokedex: data.body.results })
     }
 
+    handleClick = async () => {
+        await this.fetchPokeData();
+    }
 
+    handleChange = (e) => {
+        this.setState({ query: e.target.value });
+    }
 
-
+    sortOrder = async (e) => {
+        this.setState({ direction: e.target.value });
+    }
 
     render() {
         return (
             <div>
                 <section>
                     <label>
-                        <input />
+                        <input onChange={this.handleChange}/>
                     </label>
-                    <button onClick={this.fetchPokeData}>Get that Pokemon!</button>
+                    <select onChange={this.sortOrder}>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                    <button onClick={this.handleClick}>Get that Pokemon!</button>
                 </section>
                 <section>
-                    <PokeList pokedex={filteredPokedex}/>
+                    {this.state.pokedex.map(item => <PokeList pokemon={item}/>)}
                 </section>
 
             </div>
