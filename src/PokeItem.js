@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 
 export default class PokeItem extends Component {
+
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     render() {
         return (
             <div>
@@ -8,8 +13,8 @@ export default class PokeItem extends Component {
                 <h4>{this.props.booger.pokemon}</h4>
                 <ul>
                     <li>Number: {this.props.booger.id}</li>
-                    <li>First type: {this.props.booger.type_1}</li>
-                    <li>Second type: {this.props.booger.type_2}</li>
+                    <li>Primary Type: {this.capitalizeFirstLetter(this.props.booger.type_1)}</li>
+                    {this.props.booger.type_2 === 'NA' ? <li style={{display: "none"}}></li> : <li>Secondary Type: {this.capitalizeFirstLetter(this.props.booger.type_2)}</li>}
                 </ul>
                 <h4>Stats</h4>
                 <ul>
