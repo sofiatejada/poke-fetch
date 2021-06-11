@@ -4,7 +4,7 @@ export default class Spinner extends Component {
     render() {
         return (
             <div>
-                <img src="./egg.gif" alt="spin" />
+                <img src="egg.gif" alt="spin" />
             </div>
         )
     }

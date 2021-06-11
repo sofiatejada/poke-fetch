@@ -10,7 +10,7 @@ export default class PokeItem extends Component {
         return (
             <div>
                 <img src={this.props.booger.url_image} alt={this.props.booger.pokemon} />
-                <h4>{this.props.booger.pokemon}</h4>
+                <h4>{this.capitalizeFirstLetter(this.props.booger.pokemon)}</h4>
                 <ul>
                     <li>Number: {this.props.booger.id}</li>
                     <li>Primary Type: {this.capitalizeFirstLetter(this.props.booger.type_1)}</li>
