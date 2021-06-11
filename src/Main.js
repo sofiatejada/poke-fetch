@@ -9,7 +9,8 @@ export default class Main extends Component {
         pokedex: [],
         loading: false,
         query: '',
-        direction: '',
+        direction: 'asc',
+        type: '',
     }
 
     componentDidMount = async () => {
@@ -19,7 +20,7 @@ export default class Main extends Component {
     fetchPokeData = async () => {
         this.setState({ loading: true });
 
-        const URL = this.state.query ? `https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${this.state.query}&sort=pokemon&direction=${this.state.direction}` : 'https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon'
+        const URL = this.state.query ? `https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${this.state.query}&sort=pokemon&direction=${this.state.direction}` : `https://pokedex-alchemy.herokuapp.com/api/pokedex?sort=pokemon&direction=${this.state.direction}`
 
         const data = await request.get(URL);
         console.log(data);
