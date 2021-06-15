@@ -64,11 +64,30 @@ export default class Main extends Component {
 
     fetchTypeData = async () => {
         this.setState({ loading: true });
-        const URL = this.state.type ? `https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${this.state.query}&sort=type&direction=${this.state.direction}&type=${this.state.type}` : `https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${this.state.query}&sort=pokemon&direction=${this.state.direction}`
 
-        const data = await request.get(URL);
+        const searchParams = new URLSearchParams({
+            sort: 'type',
+            direction: this.state.direction,
+            page: this.state.page,
+        });
+        if (this.state.type) {
+            searchParams.set('type', this.state.type)
+            console.log(searchParams);
+        }
+
+        const {
+            body: { results: data },
+        } = await request.get(`https://pokedex-alchemy.herokuapp.com/api/pokedex?${searchParams.toString()}`);
+
         this.setState({ loading: false });
-        this.setState({ pokedex: data.body.results });
+        this.setState({ pokedex: data });
+
+
+        // const URL = this.state.type ? `https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${this.state.query}&sort=type&direction=${this.state.direction}&type=${this.state.type}` : `https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${this.state.query}&sort=pokemon&direction=${this.state.direction}`
+
+        // const data = await request.get(URL);
+    //     this.setState({ loading: false });
+    //     this.setState({ pokedex: data.body.results });
     }
 
     handleClick = async () => {
@@ -84,7 +103,8 @@ export default class Main extends Component {
     }
 
     sortOrder = async (e) => {
-        this.setState({ direction: e.target.value });
+        await this.setState({ direction: e.target.value });
+        this.fetchPokemon();
     }
 
     typeSearch = async (e) => {
@@ -96,7 +116,10 @@ export default class Main extends Component {
         this.fetchPokemon();
     }
 
-
+    setPreviousPage = async (e) => {
+        await this.setState({ page: this.state.page - 1 });
+        this.fetchPokemon();
+    }
 
 
     render() {
@@ -138,7 +161,8 @@ export default class Main extends Component {
                 {this.state.loading? <Spinner /> : this.state.pokedex.map(item => <PokeList pokemon={item}/>)}
                 </section>
                 <div>
-                    <button onClick={this.setPage} >Next Page ({this.state.page + 1})</button>
+                    <button onClick={this.setPreviousPage}>Previous ({this.state.page - 1})</button>
+                    <button onClick={this.setPage}>Next Page ({this.state.page + 1})</button>
                 </div>
 
             </div>
