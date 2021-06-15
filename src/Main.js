@@ -12,6 +12,7 @@ export default class Main extends Component {
         query: '',
         direction: 'asc',
         type: '',
+        page: 1,
     }
 
     componentDidMount = async () => {
@@ -36,6 +37,7 @@ export default class Main extends Component {
         const searchParams = new URLSearchParams({
             sort: 'pokemon',
             direction: this.state.direction,
+            page: this.state.page,
         });
         if (this.state.query) {
             searchParams.set('pokemon', this.state.query);
@@ -44,6 +46,17 @@ export default class Main extends Component {
         const {
             body: { results: data },
         } = await request.get(`https://pokedex-alchemy.herokuapp.com/api/pokedex?${searchParams.toString()}`);
+
+
+        console.log(this.props.location);
+
+        const location = {
+            pathname: this.props.location.pathname,
+            search: searchParams.toString(),
+        };
+
+        this.props.history.push(location);
+
         this.setState({ loading: false });
         this.setState({ pokedex: data });
     }
@@ -77,6 +90,13 @@ export default class Main extends Component {
     typeSearch = async (e) => {
         this.setState({ type: e.target.value });
     }
+
+    setPage = async (e) => {
+        await this.setState({ page: this.state.page + 1 });
+        this.fetchPokemon();
+    }
+
+
 
 
     render() {
@@ -117,6 +137,9 @@ export default class Main extends Component {
                 <section>
                 {this.state.loading? <Spinner /> : this.state.pokedex.map(item => <PokeList pokemon={item}/>)}
                 </section>
+                <div>
+                    <button onClick={this.setPage} >Next Page ({this.state.page + 1})</button>
+                </div>
 
             </div>
         )
