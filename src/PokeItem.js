@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom';
 
 export default class PokeItem extends Component {
 
@@ -9,8 +10,10 @@ export default class PokeItem extends Component {
     render() {
         return (
             <div>
-                <img src={this.props.booger.url_image} alt={this.props.booger.pokemon} />
-                <h4>{this.capitalizeFirstLetter(this.props.booger.pokemon)}</h4>
+                <Link to={`/pokemon/${this.props.booger._id}`} >
+                    <img src={this.props.booger.url_image} alt={this.props.booger.pokemon} />
+                    <h4>{this.capitalizeFirstLetter(this.props.booger.pokemon)}</h4>
+                </Link>
                 <ul>
                     <li>Number: {this.props.booger.id}</li>
                     <li>Primary Type: {this.capitalizeFirstLetter(this.props.booger.type_1)}</li>

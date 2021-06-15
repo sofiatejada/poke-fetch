@@ -15,19 +15,39 @@ export default class Main extends Component {
     }
 
     componentDidMount = async () => {
-        await this.fetchPokeData();
+        await this.fetchPokemon();
     }
 
-    fetchPokeData = async () => {
+    // fetchPokeData = async () => {
+    //     this.setState({ loading: true });
+
+    //     const URL = this.state.query ? `https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${this.state.query}&sort=pokemon&direction=${this.state.direction}` : `https://pokedex-alchemy.herokuapp.com/api/pokedex?sort=pokemon&direction=${this.state.direction}`
+
+    //     const data = await request.get(URL);
+    //     console.log(data);
+    //     this.setState({ loading: false })
+    //     this.setState({ pokedex: data.body.results })
+    // }
+
+    fetchPokemon = async () => {
+
         this.setState({ loading: true });
 
-        const URL = this.state.query ? `https://pokedex-alchemy.herokuapp.com/api/pokedex?pokemon=${this.state.query}&sort=pokemon&direction=${this.state.direction}` : `https://pokedex-alchemy.herokuapp.com/api/pokedex?sort=pokemon&direction=${this.state.direction}`
+        const searchParams = new URLSearchParams({
+            sort: 'pokemon',
+            direction: this.state.direction,
+        });
+        if (this.state.query) {
+            searchParams.set('pokemon', this.state.query);
+        }
 
-        const data = await request.get(URL);
-        console.log(data);
-        this.setState({ loading: false })
-        this.setState({ pokedex: data.body.results })
+        const {
+            body: { results: data },
+        } = await request.get(`https://pokedex-alchemy.herokuapp.com/api/pokedex?${searchParams.toString()}`);
+        this.setState({ loading: false });
+        this.setState({ pokedex: data });
     }
+
 
     fetchTypeData = async () => {
         this.setState({ loading: true });
@@ -39,7 +59,7 @@ export default class Main extends Component {
     }
 
     handleClick = async () => {
-        await this.fetchPokeData();
+        await this.fetchPokemon();
     }
 
     handleTypeClick = async () => {
